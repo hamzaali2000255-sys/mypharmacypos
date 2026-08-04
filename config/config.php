@@ -26,6 +26,7 @@ function money(float|int|string $value): string { return number_format((float)$v
 function current_user(): ?array { if(empty($_SESSION['user_id'])) return null; return ['id'=>(int)$_SESSION['user_id'],'username'=>(string)($_SESSION['username']??''),'role'=>(string)($_SESSION['role']??'cashier')]; }
 function require_login(): void { if(!current_user()){header('Location: login.php');exit;} }
 function require_role(array $roles): void { $u=current_user(); if(!$u){header('Location: login.php');exit;} if(!in_array($u['role'],$roles,true)){http_response_code(403); echo '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Access denied</title><link rel="stylesheet" href="style.css"></head><body><main><section class="panel" style="max-width:620px;margin:80px auto;text-align:center"><div style="font-size:48px">🔒</div><h1>Access Denied</h1><p>Your <b>'.e($u['role']).'</b> account does not have permission to open this section.</p><a class="btn" href="index.php">Return to Dashboard</a></section></main></body></html>'; exit;} }
+function audit_log(string $action, string $details=''): void { try { $u=current_user(); db()->prepare('INSERT INTO audit_log(user_id,action,details) VALUES(?,?,?)')->execute([$u['id']??null,$action,$details!==''?$details:null]); } catch(Throwable $e) { /* audit logging must never break a completed transaction */ } }
 
 $publicScript=basename($_SERVER['SCRIPT_FILENAME']??'');
 if(!in_array($publicScript,['login.php','logout.php'],true)) require_login();
