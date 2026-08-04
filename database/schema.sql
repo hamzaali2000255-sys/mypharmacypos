@@ -23,7 +23,7 @@ CREATE TABLE medicines (
 CREATE TABLE batches (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   medicine_id INT UNSIGNED NOT NULL,
-  batch_no VARCHAR(80) NOT NULL,
+  batch_no VARCHAR(80) NULL,
   expiry_date DATE NULL,
   units_received INT NOT NULL DEFAULT 0,
   units_remaining INT NOT NULL DEFAULT 0,
