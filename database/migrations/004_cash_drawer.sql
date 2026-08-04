@@ -1,0 +1,20 @@
+USE mypharmacypos;
+CREATE TABLE IF NOT EXISTS cash_drawer_days (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ business_date DATE NOT NULL UNIQUE,
+ opening_cash DECIMAL(12,2) NOT NULL DEFAULT 0,
+ closing_cash DECIMAL(12,2) NULL,
+ status ENUM('open','closed') NOT NULL DEFAULT 'open',
+ opened_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ closed_at TIMESTAMP NULL,
+ note VARCHAR(255) NULL
+);
+CREATE TABLE IF NOT EXISTS cash_drawer_entries (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ drawer_day_id BIGINT UNSIGNED NOT NULL,
+ entry_type ENUM('cash_in','cash_out') NOT NULL,
+ amount DECIMAL(12,2) NOT NULL DEFAULT 0,
+ reason VARCHAR(255) NOT NULL,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ FOREIGN KEY (drawer_day_id) REFERENCES cash_drawer_days(id) ON DELETE CASCADE
+);
