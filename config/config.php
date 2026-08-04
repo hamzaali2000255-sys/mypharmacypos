@@ -20,4 +20,4 @@ function db(): PDO {
 }
 
 function e(?string $value): string { return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8'); }
-function money(float $value): string { return number_format($value, 2); }
+function money(float|int|string $value): string { return number_format((float)$value, 2); }
