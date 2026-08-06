@@ -3,15 +3,11 @@ ALTER TABLE medicines ADD COLUMN IF NOT EXISTS min_profit_margin_pct DECIMAL(5,2
 CREATE TABLE IF NOT EXISTS purchases (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   invoice_no VARCHAR(60) NOT NULL UNIQUE,
-  supplier_id INT UNSIGNED NULL,
+  supplier_id INT UNSIGNED NOT NULL,
   subtotal DECIMAL(12,2) NOT NULL DEFAULT 0,
-  discount DECIMAL(12,2) NOT NULL DEFAULT 0,
-  total DECIMAL(12,2) NOT NULL DEFAULT 0,
   paid DECIMAL(12,2) NOT NULL DEFAULT 0,
-  due DECIMAL(12,2) NOT NULL DEFAULT 0,
-  notes VARCHAR(255) NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE SET NULL,
+  FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE RESTRICT,
   INDEX idx_purchase_supplier(supplier_id), INDEX idx_purchase_date(created_at)
 );
 
@@ -20,11 +16,8 @@ CREATE TABLE IF NOT EXISTS purchase_items (
   purchase_id BIGINT UNSIGNED NOT NULL,
   medicine_id INT UNSIGNED NOT NULL,
   batch_id BIGINT UNSIGNED NOT NULL,
-  boxes INT UNSIGNED NOT NULL DEFAULT 0,
-  strips INT UNSIGNED NOT NULL DEFAULT 0,
-  loose_units INT UNSIGNED NOT NULL DEFAULT 0,
   quantity_units INT UNSIGNED NOT NULL,
-  purchase_unit_cost DECIMAL(12,4) NOT NULL DEFAULT 0,
+  unit_cost DECIMAL(12,4) NOT NULL DEFAULT 0,
   line_total DECIMAL(12,2) NOT NULL DEFAULT 0,
   FOREIGN KEY (purchase_id) REFERENCES purchases(id) ON DELETE CASCADE,
   FOREIGN KEY (medicine_id) REFERENCES medicines(id) ON DELETE RESTRICT,
