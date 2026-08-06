@@ -1,5 +1,10 @@
 ALTER TABLE medicines ADD COLUMN IF NOT EXISTS min_profit_margin_pct DECIMAL(5,2) NOT NULL DEFAULT 10;
 
+-- Batch number and expiry are optional. This also upgrades existing installations
+-- where these columns were previously NOT NULL.
+ALTER TABLE batches MODIFY COLUMN batch_no VARCHAR(80) NULL;
+ALTER TABLE batches MODIFY COLUMN expiry_date DATE NULL;
+
 CREATE TABLE IF NOT EXISTS purchases (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   invoice_no VARCHAR(60) NOT NULL UNIQUE,
